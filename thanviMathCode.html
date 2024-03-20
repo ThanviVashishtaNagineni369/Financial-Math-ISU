@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Math ISU</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap">
+
+    <style>
+    
+        :root {
+            --white: #ffffff;
+            --light-blue: #87CEEB;
+            --dark-blue: #001F3F;
+            --light-grey: #F5F5F5;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+        }
+
+        #header h1 {
+            margin: 10;
+        }
+
+        #menu {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        #menu button {
+            background-color: var(--dark-blue); /* Navy blue background color */
+            color: var(--light-grey);
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px; /* Add some space between buttons */
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 20px; /* Rounded corners */
+        }
+
+        #menu button:hover {
+            background-color: #4682B4; /* Slightly darker shade of navy blue on hover */
+        }
+
+        #content {
+            max-width: 900px;
+            margin: 23px auto ;
+            padding: 0 20px;
+        }
+
+        p {
+            font-size: 20px;
+            line-height: 1.5;
+        }
+
+        button[type="submit"] {
+            width: 50%;
+            height: 50%;
+        }
+
+        #calculator-container {
+            position: absolute; /* Position the calculator absolutely */
+            bottom: 100px; /* Align the calculator 100px from the bottom of the page */
+            left: 50%; /* Center the calculator horizontally */
+            transform: translateX(-50%); /* Adjust to center horizontally */
+            width: 100%; /* Make the calculator span 90% of the width */
+            max-width: 600px; /* Limit the maximum width of the calculator */
+            background-color: var(--light-blue); /* Background color for the calculator */
+            padding: 20px; /* Padding for the calculator */
+            box-sizing: border-box; /* Include padding in width calculation */
+            border-radius: 20px; /* Round the corners of the calculator */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a shadow effect */
+        }
+
+        h2 {
+            color: var(--dark-blue);
+        }
+
+        #result,
+        #conversionResult,
+        #appreciationDepreciationResult,
+        #percentageResult,
+        #decimalResult,
+        #taxResult {
+            margin-top: 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="header">
+        <h1>Financial Math ISU</h1>
+        <div id="menu">
+            <button onclick="showCalculator('interest')">Interest Calculator</button>
+            <button onclick="showCalculator('currency')">Currency Converter</button>
+            <button onclick="showCalculator('appreciation')">Appreciation or Depreciation Calculator</button>
+            <button onclick="showCalculator('fraction')">Fraction To Percentage</button>
+            <button onclick="showCalculator('percentageToDecimal')">Percentage To Decimals</button>
+            <button onclick="showCalculator('tax')">Tax In Canada</button>
+            <button onclick="showHome()">Home</button>
+        </div>
+    </div>
+
+    <div id="content">
+        <p>Hello! My name is Thanvi Vashishta Nagineni, I have been coding for the past three years. I know HTML, CSS, Javascript,
+            Python, and C++. What started as my dad forcing me to learn coding during covid, when I was sitting at home
+            bored, turned into a hobby. I hope you like this website I coded for my ISU math project</p>
+    </div>
+
+    <div id="calculator-container"></div>
+
+    <script>
+        
+         function showHome() {
+            document.getElementById('calculator-container').style.display = 'none';
+        }
+
+        function showCalculator(calculatorType) {
+            document.getElementById('calculator-container').style.display = 'block';
+
+            switch (calculatorType) {
+                case 'interest':
+                    document.getElementById('calculator-container').innerHTML = `
+                        <h2>Interest Calculator</h2>
+                        <form onsubmit="calculateInterest(); return false;">
+                        <table width="100%">
+                            <tr><td width="30%"><label for="principal">Principal Amount:</label></td>
+                                <td width="70%">
+                            <input type="number" id="principal" required>
+                            </td></tr>
+                            <tr><td>
+                            <label for="rate">Interest Rate (%):</label></td><td>
+                            <input type="number" id="rate" required>
+                            </td></tr>
+                            <tr><td>
+                            <label for="time">Time (years):</label></td><td>
+                            <input type="number" id="time" required>
+                            </td></tr>
+                            <tr><td>
+                            <label for="interestType">Interest Type:</label></td><td>
+                            <select id="interestType" required>
+                                <option value="simple">Simple Interest</option>
+                                <option value="compound">Compound Interest</option>
+                            </select></td></tr>
+                        </table>
+                            <button type="submit">Calculate</button>
+                        </form>
+                        <div id="result"></div>
+                    `;
+                    break;
+
+                case 'currency':
+                    document.getElementById('calculator-container').innerHTML = `
+                        <h2>Currency Converter</h2>
+                        <form onsubmit="convertCurrency(); return false;">
+                           <table width="100%">
+                            <tr><td width="30%"> <label for="amount">Amount:</label> </td>
+                                <td>
+                            <input type="number" id="amount" required> </td></tr>
+
+                          <tr><td width="30%">  <label for="fromCurrency">From Currency:</label></td>
+                                <td>
+                            <select id="fromCurrency" required>
+                                <option value="USD">United States Dollar (USD)</option>
+                                <option value="EUR">Euro (EUR)</option>
+                                <option value="CNY">Chinese Yuan (CNY)</option>
+                                <option value="JPY">Japanese Yen (JPY)</option>
+                                <option value="GBP">British Pound Sterling (GBP)</option>
+                                <option value="CHF">Swiss Franc (CHF)</option>
+                                <option value="CAD">Canadian Dollar (CAD)</option>
+                                <option value="AUD">Australian Dollar (AUD)</option>
+                                <option value="NZD">New Zealand Dollar (NZD)</option>
+                                <option value="ZAR">South African Rand (ZAR)</option>
+                                <option value="SGD">Singapore Dollar (SGD)</option>
+                                <option value="HKD">Hong Kong Dollar (HKD)</option>
+                                <option value="NOK">Norwegian Krone (NOK)</option>
+                                <option value="SEK">Swedish Krona (SEK)</option>
+                                <option value="INR">Indian Rupee (INR)</option>
+                                <option value="BRL">Brazilian Real (BRL)</option>
+                                <option value="RUB">Russian Ruble (RUB)</option>
+                                <option value="MXN">Mexican Peso (MXN)</option>
+                                <option value="KRW">South Korean Won (KRW)</option>
+                                <option value="TRY">Turkish Lira (TRY)</option>
+                            </select></td></tr>
+
+                            <tr><td width="30%">  <label for="toCurrency">To Currency:</label></td>
+                                <td>
+                            <select id="toCurrency" required>
+                                <option value="USD">United States Dollar (USD)</option>
+                                <option value="EUR">Euro (EUR)</option>
+                                <option value="CNY">Chinese Yuan (CNY)</option>
+                                <option value="JPY">Japanese Yen (JPY)</option>
+                                <option value="GBP">British Pound Sterling (GBP)</option>
+                                <option value="CHF">Swiss Franc (CHF)</option>
+                                <option value="CAD">Canadian Dollar (CAD)</option>
+                                <option value="AUD">Australian Dollar (AUD)</option>
+                                <option value="NZD">New Zealand Dollar (NZD)</option>
+                                <option value="ZAR">South African Rand (ZAR)</option>
+                                <option value="SGD">Singapore Dollar (SGD)</option>
+                                <option value="HKD">Hong Kong Dollar (HKD)</option>
+                                <option value="NOK">Norwegian Krone (NOK)</option>
+                                <option value="SEK">Swedish Krona (SEK)</option>
+                                <option value="INR">Indian Rupee (INR)</option>
+                                <option value="BRL">Brazilian Real (BRL)</option>
+                                <option value="RUB">Russian Ruble (RUB)</option>
+                                <option value="MXN">Mexican Peso (MXN)</option>
+                                <option value="KRW">South Korean Won (KRW)</option>
+                                <option value="TRY">Turkish Lira (TRY)</option>
+                            </select>
+</td></tr>
+</table>
+                            <button type="submit">Convert</button>
+                        </form>
+                        <div id="conversionResult"></div>
+                    `;
+                    break;
+
+                case 'appreciation':
+                    document.getElementById('calculator-container').innerHTML = `
+                        <h2>Appreciation or Depreciation Calculator</h2>
+                        <form onsubmit="calculateAppreciationDepreciation(); return false;">
+                          <table><tr><td width="30%">  <label for="initialValue">Initial Value:</label></td><td>
+                            <input type="number" id="initialValue" required></td></tr>
+                            <tr><td>
+                            <label for="finalValue">Final Value:</label></td><td>
+                            <input type="number" id="finalValue" required></td></tr>
+                                    </table>
+                            <button type="submit">Calculate</button>
+                        </form>
+                        <div id="appreciationDepreciationResult"></div>
+                    `;
+                    break;
+
+                case 'fraction':
+                    document.getElementById('calculator-container').innerHTML = `
+                        <h2>Fraction To Percentage</h2>
+                        <form onsubmit="convertFractionToPercentage(); return false;"></td><td>
+                         <table><tr><td width="30%">    
+                            <label for="numerator">Numerator:</label></td><td>
+                            <input type="number" id="numerator" required></td></tr>
+
+                           <tr><td> <label for="denominator">Denominator:</label></td><td>
+                            <input type="number" id="denominator" required></td></tr>
+</table>
+                            <button type="submit">Convert</button>
+                        </form>
+                        <div id="percentageResult"></div>
+                    `;
+                    break;
+
+                case 'percentageToDecimal':
+                    document.getElementById('calculator-container').innerHTML = `
+                        <h2>Percentage To Decimals</h2>
+                        <form onsubmit="convertPercentageToDecimal(); return false;">
+                        <table><tr><td width="30%">        <label for="percentage">Percentage:</label></td><td>
+                            <input type="number" id="percentage" required></td></tr>
+                        </table>
+                            <button type="submit">Convert</button>
+                        </form>
+                        <div id="decimalResult"></div>
+                    `;
+                    break;
+
+                case 'tax':
+                    document.getElementById('calculator-container').innerHTML = `
+                        <h2>Tax In Canada</h2>
+                        <form onsubmit="calculateTax(); return false;">
+                          <table><tr><td width="30%">   <label for="province">Province/Territory:</label></td><td>
+                            <select id="province" required>
+                                <option value="Alberta">Alberta</option>
+                                <option value="BritishColumbia">British Columbia</option>
+                                <option value="Ontario">Ontario</option>
+                                <option value="Quebec">Quebec</option>
+                                <option value="Manitoba">Manitoba</option>
+                                <option value="Saskatchewan">Saskatchewan</option>
+                                <option value="NewBrunswick">New Brunswick</option>
+                                <option value="NewfoundlandLabrador">Newfoundland and Labrador</option>
+                                <option value="NovaScotia">Nova Scotia</option>
+                                <option value="PrinceEdwardIsland">Prince Edward Island</option>
+                                <option value="NorthwestTerritories">Northwest Territories</option>
+                                <option value="Nunavut">Nunavut</option>
+                                <option value="Yukon">Yukon</option>
+                            </select></td></tr>
+
+                           <tr><td> <label for="price">Price:</label></td><td>
+                            <input type="number" id="price" required></td></tr></table>
+
+                            <button type="submit">Calculate Tax</button>
+                        </form>
+                        <div id="taxResult"></div>
+                    `;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        function calculateInterest() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value);
+            const time = parseFloat(document.getElementById('time').value);
+            const interestType = document.getElementById('interestType').value;
+
+            const interest = (interestType === 'simple') ? (principal * rate * time) / 100 : principal * (Math.pow((1 + rate / 100), time) - 1);
+            const totalAmount = principal + interest;
+
+            document.getElementById('result').innerHTML = `
+                <p>Interest Amount: $${interest.toFixed(2)}</p>
+                <p>Total Amount: $${totalAmount.toFixed(2)}</p>
+            `;
+        }
+
+        function convertCurrency() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+
+            // Realistic conversion rates as of the last knowledge update
+            const conversionRates = {
+                'USD': { 'EUR': 0.85, 'CNY': 6.37, 'JPY': 110.20, 'GBP': 0.72, 'CHF': 0.93, 'CAD': 1.25, 'AUD': 1.28, 'NZD': 1.38, 'ZAR': 15.34, 'SGD': 1.35, 'HKD': 7.78, 'NOK': 8.60, 'SEK': 8.49, 'INR': 75.01, 'BRL': 5.05, 'RUB': 72.81, 'MXN': 20.06, 'KRW': 1171.14, 'TRY': 14.04 },
+                'EUR': { 'USD': 1.18, 'CNY': 7.51, 'JPY': 130.50, 'GBP': 0.86, 'CHF': 1.10, 'CAD': 1.48, 'AUD': 1.51, 'NZD': 1.63, 'ZAR': 18.17, 'SGD': 1.57, 'HKD': 9.03, 'NOK': 9.99, 'SEK': 9.86, 'INR': 87.49, 'BRL': 5.88, 'RUB': 84.97, 'MXN': 23.35, 'KRW': 1362.70, 'TRY': 16.35 },
+                'CNY': { 'USD': 0.16, 'EUR': 0.13, 'JPY': 17.30, 'GBP': 0.11, 'CHF': 0.14, 'CAD': 0.19, 'AUD': 0.19, 'NZD': 0.20, 'ZAR': 2.23, 'SGD': 0.19, 'HKD': 1.10, 'NOK': 1.22, 'SEK': 1.20, 'INR': 10.59, 'BRL': 0.71, 'RUB': 10.27, 'MXN': 2.82, 'KRW': 163.65, 'TRY': 1.96 },
+                'JPY': { 'USD': 0.0091, 'EUR': 0.0077, 'CNY': 0.058, 'GBP': 0.0066, 'CHF': 0.0085, 'CAD': 0.011, 'AUD': 0.011, 'NZD': 0.012, 'ZAR': 0.132, 'SGD': 0.011, 'HKD': 0.062, 'NOK': 0.068, 'SEK': 0.067, 'INR': 0.592, 'BRL': 0.040, 'RUB': 0.580, 'MXN': 0.16, 'KRW': 9.27, 'TRY': 0.11 },
+                'GBP': { 'USD': 1.39, 'EUR': 1.16, 'CNY': 8.88, 'JPY': 151.20, 'CHF': 1.28, 'CAD': 1.71, 'AUD': 1.75, 'NZD': 1.89, 'ZAR': 21.05, 'SGD': 1.83, 'HKD': 10.55, 'NOK': 11.67, 'SEK': 11.49, 'INR': 101.90, 'BRL': 6.85, 'RUB': 98.70, 'MXN': 27.13, 'KRW': 1579.23, 'TRY': 18.94 },
+                'CHF': { 'USD': 1.08, 'EUR': 0.91, 'CNY': 7.19, 'JPY': 117.72, 'GBP': 0.78, 'CAD': 1.34, 'AUD': 1.37, 'NZD': 1.48, 'ZAR': 16.46, 'SGD': 1.43, 'HKD': 8.24, 'NOK': 9.12, 'SEK': 8.98, 'INR': 79.69, 'BRL': 5.37, 'RUB': 77.33, 'MXN': 21.29, 'KRW': 1236.55, 'TRY': 14.84 },
+                'CAD': { 'USD': 0.80, 'EUR': 0.68, 'CNY': 5.30, 'JPY': 86.82, 'GBP': 0.58, 'CHF': 0.75, 'AUD': 1.02, 'NZD': 1.10, 'ZAR': 12.24, 'SGD': 1.06, 'HKD': 6.10, 'NOK': 6.76, 'SEK': 6.66, 'INR': 59.07, 'BRL': 3.98, 'RUB': 57.41, 'MXN': 15.81, 'KRW': 918.86, 'TRY': 11.02 },
+                'AUD': { 'USD': 0.78, 'EUR': 0.66, 'CNY': 5.23, 'JPY': 85.67, 'GBP': 0.57, 'CHF': 0.73, 'CAD': 0.98, 'NZD': 1.08, 'ZAR': 12.01, 'SGD': 1.04, 'HKD': 5.97, 'NOK': 6.61, 'SEK': 6.51, 'INR': 57.86, 'BRL': 3.89, 'RUB': 56.21, 'MXN': 15.47, 'KRW': 899.57, 'TRY': 10.79 },
+                'NZD': { 'USD': 0.73, 'EUR': 0.62, 'CNY': 4.92, 'JPY': 80.73, 'GBP': 0.54, 'CHF': 0.69, 'CAD': 0.91, 'AUD': 0.92, 'ZAR': 11.14, 'SGD': 0.97, 'HKD': 5.59, 'NOK': 6.19, 'SEK': 6.10, 'INR': 54.38, 'BRL': 3.66, 'RUB': 52.87, 'MXN': 14.56, 'KRW': 846.98, 'TRY': 10.17 },
+                'ZAR': { 'USD': 0.065, 'EUR': 0.055, 'CNY': 0.45, 'JPY': 7.55, 'GBP': 0.047, 'CHF': 0.061, 'CAD': 0.082, 'AUD': 0.083, 'NZD': 0.090, 'SGD': 0.087, 'HKD': 0.50, 'NOK': 0.55, 'SEK': 0.54, 'INR': 4.79, 'BRL': 0.32, 'RUB': 4.63, 'MXN': 1.27, 'KRW': 73.79, 'TRY': 0.89 },
+                'SGD': { 'USD': 0.74, 'EUR': 0.62, 'CNY': 4.92, 'JPY': 80.52, 'GBP': 0.54, 'CHF': 0.69, 'CAD': 0.92, 'AUD': 0.93, 'NZD': 1.01, 'ZAR': 11.21, 'HKD': 5.75, 'NOK': 6.37, 'SEK': 6.28, 'INR': 55.92, 'BRL': 3.76, 'RUB': 54.16, 'MXN': 14.89, 'KRW': 865.33, 'TRY': 10.39 },
+                'HKD': { 'USD': 0.13, 'EUR': 0.11, 'CNY': 0.88, 'JPY': 14.34, 'GBP': 0.093, 'CHF': 0.12, 'CAD': 0.16, 'AUD': 0.16, 'NZD': 0.17, 'ZAR': 1.88, 'SGD': 0.17, 'NOK': 1.11, 'SEK': 1.09, 'INR': 9.68, 'BRL': 0.65, 'RUB': 9.42, 'MXN': 2.59, 'KRW': 150.68, 'TRY': 1.81 },
+                'NOK': { 'USD': 0.12, 'EUR': 0.11, 'CNY': 0.88, 'JPY': 14.38, 'GBP': 0.085, 'CHF': 0.11, 'CAD': 0.15, 'AUD': 0.16, 'NZD': 0.17, 'ZAR': 1.88, 'SGD': 0.16, 'HKD': 0.90, 'SEK': 0.99, 'INR': 8.77, 'BRL': 0.59, 'RUB': 8.55, 'MXN': 2.35, 'KRW': 136.40, 'TRY': 1.64 },
+                'SEK': { 'USD': 0.12, 'EUR': 0.11, 'CNY': 0.87, 'JPY': 14.24, 'GBP': 0.087, 'CHF': 0.11, 'CAD': 0.15, 'AUD': 0.16, 'NZD': 0.17, 'ZAR': 1.86, 'SGD': 0.16, 'HKD': 0.92, 'NOK': 1.01, 'INR': 8.92, 'BRL': 0.60, 'RUB': 8.70, 'MXN': 2.39, 'KRW': 138.70, 'TRY': 1.67 },
+                'INR': { 'USD': 0.013, 'EUR': 0.011, 'CNY': 0.083, 'JPY': 1.69, 'GBP': 0.0098, 'CHF': 0.013, 'CAD': 0.017, 'AUD': 0.018, 'NZD': 0.019, 'ZAR': 0.21, 'SGD': 0.018, 'HKD': 0.10, 'NOK': 0.11, 'SEK': 0.11, 'BRL': 0.067, 'RUB': 0.97, 'MXN': 0.27, 'KRW': 15.51, 'TRY': 0.19 },
+                'BRL': { 'USD': 0.20, 'EUR': 0.17, 'CNY': 1.38, 'JPY': 22.39, 'GBP': 0.13, 'CHF': 0.17, 'CAD': 0.23, 'AUD': 0.24, 'NZD': 0.26, 'ZAR': 2.90, 'SGD': 0.25, 'HKD': 1.45, 'NOK': 1.60, 'SEK': 1.58, 'INR': 14.95, 'RUB': 14.44, 'MXN': 3.19, 'KRW': 185.53, 'TRY': 2.23 },
+                'RUB': { 'USD': 0.014, 'EUR': 0.012, 'CNY': 0.097, 'JPY': 1.72, 'GBP': 0.010, 'CHF': 0.013, 'CAD': 0.017, 'AUD': 0.018, 'NZD': 0.019, 'ZAR': 0.21, 'SGD': 0.018, 'HKD': 0.10, 'NOK': 0.11, 'SEK': 0.11, 'INR': 0.65, 'BRL': 0.070, 'MXN': 0.22, 'KRW': 12.67, 'TRY': 0.15 },
+                'MXN': { 'USD': 0.050, 'EUR': 0.042, 'CNY': 0.34, 'JPY': 5.88, 'GBP': 0.037, 'CHF': 0.049, 'CAD': 0.067, 'AUD': 0.069, 'NZD': 0.074, 'ZAR': 0.82, 'SGD': 0.071, 'HKD': 0.41, 'NOK': 0.45, 'SEK': 0.44, 'INR': 3.96, 'BRL': 0.31, 'RUB': 4.47, 'KRW': 58.05, 'TRY': 0.71 },
+                'KRW': { 'USD': 0.00086, 'EUR': 0.00073, 'CNY': 0.0061, 'JPY': 0.11, 'GBP': 0.00063, 'CHF': 0.00081, 'CAD': 0.0011, 'AUD': 0.0011, 'NZD': 0.0012, 'ZAR': 0.014, 'SGD': 0.0012, 'HKD': 0.0069, 'NOK': 0.0073, 'SEK': 0.0072, 'INR': 0.064, 'BRL': 0.0054, 'RUB': 0.079, 'MXN': 0.017, 'TRY': 0.12 },
+                'TRY': { 'USD': 0.072, 'EUR': 0.061, 'CNY': 0.49, 'JPY': 8.47, 'GBP': 0.055, 'CHF': 0.070, 'CAD': 0.095, 'AUD': 0.097, 'NZD': 0.10, 'ZAR': 1.15, 'SGD': 0.099, 'HKD': 0.57, 'NOK': 0.63, 'SEK': 0.62, 'INR': 5.51, 'BRL': 0.47, 'RUB': 6.78, 'MXN': 1.77, 'KRW': 8.13 },
+            };
+
+            const convertedAmount = (amount * conversionRates[fromCurrency][toCurrency]).toFixed(2);
+
+            document.getElementById('conversionResult').innerHTML = `
+                <p>${amount} ${fromCurrency} is equal to ${convertedAmount} ${toCurrency}</p>
+            `;
+        }
+
+        function calculateAppreciationDepreciation() {
+            const initialValue = parseFloat(document.getElementById('initialValue').value);
+            const finalValue = parseFloat(document.getElementById('finalValue').value);
+
+            const appreciationDepreciation = finalValue - initialValue;
+            const percentChange = (appreciationDepreciation / initialValue) * 100;
+
+            document.getElementById('appreciationDepreciationResult').innerHTML = `
+                <p>Appreciation/Depreciation: $${appreciationDepreciation.toFixed(2)}</p>
+                <p>Percent Change: ${percentChange.toFixed(2)}%</p>
+            `;
+        }
+
+        function convertFractionToPercentage() {
+            const numerator = parseFloat(document.getElementById('numerator').value);
+            const denominator = parseFloat(document.getElementById('denominator').value);
+
+            const percentage = (numerator / denominator) * 100;
+
+            document.getElementById('percentageResult').innerHTML = `
+                <p>${numerator}/${denominator} as a percentage is ${percentage.toFixed(2)}%</p>
+            `;
+        }
+
+        function convertPercentageToDecimal() {
+            const percentage = parseFloat(document.getElementById('percentage').value);
+            const decimal = percentage / 100;
+
+            document.getElementById('decimalResult').innerHTML = `
+                <p>${percentage}% as a decimal is ${decimal.toFixed(2)}</p>
+            `;
+        }
+ 
+        function calculateTax() {
+            const province = document.getElementById('province').value;
+            const price = parseFloat(document.getElementById('price').value);
+
+            const taxRates = {
+                'Alberta': .05,
+                'BritishColumbia': .12,
+                'Ontario': .13,
+                'Quebec': .14975,
+                'Manitoba': .12,
+                'Saskatchewan': .06,
+                'NewBrunswick': .10,
+                'NewfoundlandLabrador': .10,
+                'NovaScotia': .10,
+                'PrinceEdwardIsland': .10,
+                'NorthwestTerritories': .05,
+                'Nunavut': .05,
+                'Yukon': .05
+            };
+
+            const tax = taxRates[province] * price;
+            const totalPrice = price + tax;
+
+            document.getElementById('taxResult').innerHTML = `
+                <p>Tax in ${province}: $${tax.toFixed(2)}</p>
+                <p>Total Price: $${totalPrice.toFixed(2)}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
